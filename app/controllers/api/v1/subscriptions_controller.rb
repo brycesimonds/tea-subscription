@@ -10,6 +10,12 @@ class Api::V1::SubscriptionsController < ApplicationController
     end
   end
 
+  def update
+    customer_subscription = CustomerSubscription.where(customer_id: params[:customer_id], subscription_id: params[:subscription_id]).first
+    customer_subscription.update!(subscription_params)
+    render json: customer_subscription
+  end
+
   def find_customer
     @customer = Customer.find(params[:customer_id])
   end
