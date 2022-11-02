@@ -1,0 +1,89 @@
+require 'rails_helper'
+
+RSpec.describe "Customer Subscriptions Requests" do 
+  before :each do
+    @customer_1 = Customer.create!(
+      first_name: Faker::Name.first_name,
+      last_name: Faker::Name.last_name,
+      email: Faker::Internet.email,
+      address: Faker::Address.full_address
+      )
+    @customer_2 = Customer.create!(
+      first_name: Faker::Name.first_name,
+      last_name: Faker::Name.last_name,
+      email: Faker::Internet.email,
+      address: Faker::Address.full_address
+      )
+
+    @subscription_1 = Subscription.create!(
+      title: "30 Day Subscription",
+      price: 30.00,
+      frequency: 12
+      )
+    @subscription_2 = Subscription.create!(
+      title: "60 Day Subscription",
+      price: 60.00,
+      frequency: 6
+      )
+
+    CustomerSubscription.create!(customer_id: @customer_1.id, subscription_id: @subscription_1.id, status: 0)
+
+    @tea_1 = Tea.create!(
+      title: "Black Tea",
+      description: Faker::Quote.yoda,
+      temperature: 110.00,
+      brew_time: 4,
+      )
+    @tea_2 = Tea.create!(
+      title: "Green Tea",
+      description: Faker::Quote.yoda,
+      temperature: 105.00,
+      brew_time: 2,
+      )
+    @tea_3 = Tea.create!(
+      title: "Oolong Tea",
+      description: Faker::Quote.yoda,
+      temperature: 100.00,
+      brew_time: 3,
+      )
+
+    SubscriptionTea.create!(subscription_id: @subscription_1.id, tea_id: @tea_1.id)
+    SubscriptionTea.create!(subscription_id: @subscription_2.id, tea_id: @tea_2.id)
+    SubscriptionTea.create!(subscription_id: @subscription_2.id, tea_id: @tea_3.id)
+  end
+
+  describe 'An endpoint to subscribe a customer to a tea subscription' do 
+    it 'subscribes a customer to a tea subscription' do 
+      customer_subscription_params = ({
+        customer_id: @customer_1.id,
+        subscription_id: @subscription_2.id,
+        status: 1,
+        })
+      headers = {"CONTENT_TYPE" => "application/json"}
+      post '/api/v1/subscriptions/subscribe', headers: headers, params: JSON.generate(customer_subscription_params)
+
+      expect(response).to be_successful 
+      expect(response.status).to eq(201)
+
+      created_association = CustomerSubscription.last 
+      expect(created_association.customer_id).to eq(@customer_1.id)
+      expect(created_association.subscription_id).to eq(@subscription_2.id)
+      expect(created_association.status).to eq("active")
+      expect(@customer_1.teas.where('status = ?', '1')).to eq([@tea_2, @tea_3])
+      expect(@customer_1.teas.where('status = ?', '0')).to eq([@tea_1])
+    end
+
+    it 'returns 400 and does not create subscribe a customer to the tea subscription' do 
+      customer_subscription_params = ({
+        customer_id: @customer_1.id,
+        subscription_id: 9999999999,
+        status: 1,
+        })
+      headers = {"CONTENT_TYPE" => "application/json"}
+      post '/api/v1/subscriptions/subscribe', headers: headers, params: JSON.generate(customer_subscription_params)
+
+      expect(response).to_not be_successful 
+      expect(response.status).to eq(400)
+    end
+  end
+end
