@@ -61,7 +61,7 @@ RSpec.describe "Customer Subscriptions Requests" do
         status: '1',
         })
       headers = {"CONTENT_TYPE" => "application/json"}
-      post "/api/v1/customersubscription", headers: headers, params: JSON.generate(customer_subscription_params)
+      post '/api/v1/subscriptions/subscribe', headers: headers, params: JSON.generate(customer_subscription_params)
 
       expect(response).to be_successful 
       expect(response.status).to eq(201)
