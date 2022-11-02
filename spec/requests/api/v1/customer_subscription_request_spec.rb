@@ -82,8 +82,6 @@ RSpec.describe "Customer Subscriptions Requests" do
       expect(created_association.customer_id).to eq(@customer_1.id)
       expect(created_association.subscription_id).to eq(@subscription_2.id)
       expect(created_association.status).to eq("active")
-      expect(@customer_1.teas.where('status = ?', '1')).to eq([@tea_2, @tea_3])
-      expect(@customer_1.teas.where('status = ?', '0')).to eq([@tea_1])
     end
 
     it 'returns 400 and does not create subscribe a customer to the tea subscription' do 
