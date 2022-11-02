@@ -25,8 +25,11 @@ RSpec.describe "Customer Subscriptions Requests" do
       price: 60.00,
       frequency: 6
       )
-
-    CustomerSubscription.create!(customer_id: @customer_1.id, subscription_id: @subscription_1.id, status: 0)
+    @subscription_3 = Subscription.create!(
+      title: "90 Day Subscription",
+      price: 90.00,
+      frequency: 4
+      )
 
     @tea_1 = Tea.create!(
       title: "Black Tea",
@@ -46,10 +49,20 @@ RSpec.describe "Customer Subscriptions Requests" do
       temperature: 100.00,
       brew_time: 3,
       )
+    @tea_4 = Tea.create!(
+      title: "Peppermint Tea",
+      description: Faker::Quote.yoda,
+      temperature: 120.00,
+      brew_time: 5,
+      )
+
+    CustomerSubscription.create!(customer_id: @customer_1.id, subscription_id: @subscription_1.id, status: 0)
+    @cust1_and_sub3 = CustomerSubscription.create!(customer_id: @customer_1.id, subscription_id: @subscription_3.id, status: 1)
 
     SubscriptionTea.create!(subscription_id: @subscription_1.id, tea_id: @tea_1.id)
     SubscriptionTea.create!(subscription_id: @subscription_2.id, tea_id: @tea_2.id)
     SubscriptionTea.create!(subscription_id: @subscription_2.id, tea_id: @tea_3.id)
+    SubscriptionTea.create!(subscription_id: @subscription_3.id, tea_id: @tea_4.id)
   end
 
   describe 'An endpoint to subscribe a customer to a tea subscription' do 
@@ -69,8 +82,6 @@ RSpec.describe "Customer Subscriptions Requests" do
       expect(created_association.customer_id).to eq(@customer_1.id)
       expect(created_association.subscription_id).to eq(@subscription_2.id)
       expect(created_association.status).to eq("active")
-      expect(@customer_1.teas.where('status = ?', '1')).to eq([@tea_2, @tea_3])
-      expect(@customer_1.teas.where('status = ?', '0')).to eq([@tea_1])
     end
 
     it 'returns 400 and does not create subscribe a customer to the tea subscription' do 
@@ -86,4 +97,20 @@ RSpec.describe "Customer Subscriptions Requests" do
       expect(response.status).to eq(400)
     end
   end
+
+  describe 'An endpoint to cancel a customers tea subscription' do 
+    it 'sets status from active to cancelled for a customers tea subscription' do 
+      customer_subscription_params = ({
+        customer_id: @customer_1.id,
+        subscription_id: @subscription_3.id,
+        status: 0,
+        })
+      headers = {"CONTENT_TYPE" => "application/json"}
+      patch '/api/v1/subscriptions/unsubscribe', headers: headers, params: JSON.generate(customer_subscription_params)
+
+      updated_customer_subscription = CustomerSubscription.find_by(id: @cust1_and_sub3.id)
+      expect(response).to be_successful
+      expect(updated_customer_subscription.status).to eq('cancelled')
+    end
+  end 
 end
