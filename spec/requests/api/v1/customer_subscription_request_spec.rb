@@ -68,9 +68,9 @@ RSpec.describe "Customer Subscriptions Requests" do
   describe 'An endpoint to subscribe a customer to a tea subscription' do 
     it 'subscribes a customer to a tea subscription' do 
       customer_subscription_params = ({
-        customer_id: @customer_1.id,
-        subscription_id: @subscription_2.id,
-        status: 1,
+        "customer_id": "#{@customer_1.id}",
+        "subscription_id": "#{@subscription_2.id}",
+        "status": 1
         })
       headers = {"CONTENT_TYPE" => "application/json"}
       post '/api/v1/subscriptions/subscribe', headers: headers, params: JSON.generate(customer_subscription_params)
@@ -86,9 +86,9 @@ RSpec.describe "Customer Subscriptions Requests" do
 
     it 'returns 400 and does not create subscribe a customer to the tea subscription' do 
       customer_subscription_params = ({
-        customer_id: @customer_1.id,
-        subscription_id: 9999999999,
-        status: 1,
+        "customer_id": "#{@customer_1.id}",
+        "subscription_id": "999999999",
+        "status": 1
         })
       headers = {"CONTENT_TYPE" => "application/json"}
       post '/api/v1/subscriptions/subscribe', headers: headers, params: JSON.generate(customer_subscription_params)
@@ -101,9 +101,9 @@ RSpec.describe "Customer Subscriptions Requests" do
   describe 'An endpoint to cancel a customers tea subscription' do 
     it 'sets status from active to cancelled for a customers tea subscription' do 
       customer_subscription_params = ({
-        customer_id: @customer_1.id,
-        subscription_id: @subscription_3.id,
-        status: 0,
+        "customer_id": "#{@customer_1.id}",
+        "subscription_id": "#{@subscription_3.id}",
+        "status": 0
         })
       headers = {"CONTENT_TYPE" => "application/json"}
       patch '/api/v1/subscriptions/unsubscribe', headers: headers, params: JSON.generate(customer_subscription_params)
@@ -111,6 +111,26 @@ RSpec.describe "Customer Subscriptions Requests" do
       updated_customer_subscription = CustomerSubscription.find_by(id: @cust1_and_sub3.id)
       expect(response).to be_successful
       expect(updated_customer_subscription.status).to eq('cancelled')
+    end
+  end 
+
+  describe 'An endpoint to retrieve all tea subscriptions for a customer' do 
+    it 'gets all a customers tea subscriptions regardless of status' do 
+
+      get "/api/v1/customers/#{@customer_1.id}/subscriptions"
+
+      expect(response).to be_successful
+      expect(response.status).to eq(200)
+      
+      tea_subscription_data = JSON.parse(response.body, symbolize_names: true)
+      tea_subscription_data.map do |single_subscription| 
+        expect(single_subscription).to have_key(:customer_id)
+        expect(single_subscription[:customer_id]).to be_a(Integer)
+        expect(single_subscription).to have_key(:subscription_id)
+        expect(single_subscription[:subscription_id]).to be_a(Integer)
+        expect(single_subscription).to have_key(:status)
+        expect(single_subscription[:status]).to be_a(String)
+      end 
     end
   end 
 end

@@ -1,6 +1,11 @@
-class Api::V1::SubscriptionsController < ApplicationController
-  before_action :find_customer, only: [:create]
+class Api::V1::CustomerSubscriptionsController < ApplicationController
+  before_action :subscription_params, only: [:create]
 
+  def index
+    customer = Customer.find(params[:id])
+    render json: customer.customer_subscriptions
+  end
+  
   def create
     add_subscription_to_customer = CustomerSubscription.new(subscription_params)
     if add_subscription_to_customer.save
@@ -16,13 +21,9 @@ class Api::V1::SubscriptionsController < ApplicationController
     render json: customer_subscription
   end
 
-  def find_customer
-    @customer = Customer.find(params[:customer_id])
-  end
-
   private
 
   def subscription_params
-    params.permit(:customer_id, :subscription_id, :status)
+    JSON.parse(request.raw_post, symbolize_names: true)
   end
 end
