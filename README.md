@@ -1,3 +1,5 @@
+  <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" />  <img src="https://img.shields.io/badge/Markdown-000000?style=for-the-badge&logo=markdown&logoColor=white" />  <img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white"/> <img src="https://img.shields.io/badge/Ruby_on_Rails-CC0000?style=for-the-badge&logo=ruby-on-rails&logoColor=white" /> <img src="https://img.shields.io/badge/Ruby-CC342D?style=for-the-badge&logo=ruby&logoColor=white" /> <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" /> 
+  
 ## About This Project
 A Rails API for a Tea Subscription Service where a customer can subscribe to a tea subscription, cancel a tea subscription, and get a list of all their subsciptions (active and cancelled).
 
@@ -5,6 +7,7 @@ A Rails API for a Tea Subscription Service where a customer can subscribe to a t
 * [Local Setup](https://github.com/brycesimonds/tea-subscription/blob/main/README.md#local-setup)
 * [Deployment](https://github.com/brycesimonds/tea-subscription/blob/main/README.md#deployment)
 * [Postman Examples](https://github.com/brycesimonds/tea-subscription/blob/main/README.md#postman-examples)
+* [Database Schema](https://github.com/brycesimonds/tea-subscription/blob/main/README.md#database-schema)
 
 ## Local Setup
 This project requires:
@@ -30,10 +33,6 @@ This project requires:
 
 ### 3. An endpoint to see all of a customer’s subsciptions (active and cancelled)
 ![All a customers subscriptions](https://user-images.githubusercontent.com/103782984/199860129-9245352e-4065-4670-a3d2-3c98adce25bc.gif)
-
-
-## Technology
-  <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" />  <img src="https://img.shields.io/badge/Markdown-000000?style=for-the-badge&logo=markdown&logoColor=white" />  <img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white"/> <img src="https://img.shields.io/badge/Ruby_on_Rails-CC0000?style=for-the-badge&logo=ruby-on-rails&logoColor=white" /> <img src="https://img.shields.io/badge/Ruby-CC342D?style=for-the-badge&logo=ruby&logoColor=white" /> <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" /> ![Heroku](https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white) ![GraphQL](https://img.shields.io/badge/-GraphQL-E10098?style=for-the-badge&logo=graphql&logoColor=white)
   
 ## Database Schema
 ![Screen Shot 2022-11-03 at 10 02 20 AM](https://user-images.githubusercontent.com/103782984/199772021-785728a0-d0c9-450f-8f10-334eca015b23.png)
